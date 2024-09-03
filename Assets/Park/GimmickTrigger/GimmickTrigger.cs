@@ -5,13 +5,19 @@ using UnityEngine;
 public abstract class GimmickTrigger : MonoBehaviour
 {
     public bool testbool;
+    [HideInInspector] public bool isTriggered;
     [Header("GimmickInput을 설정할 수 있습니다.\n 설정값이 없을 경우 부모 오브젝트의 GimmickInput를 실행합니다")]
     public GimmickInput GimmickInput;
+    private void Start()
+    {
+        isTriggered = false;
+    }
     public void InvokeEventRunOnTrigger()
     {
         if (GimmickInput != null)
         {
-            GimmickInput.InvokeEvent();
+            isTriggered = true;
+            GimmickInput.TriggerCheck();
         }
         else
         {

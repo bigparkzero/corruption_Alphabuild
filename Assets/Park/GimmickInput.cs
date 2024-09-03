@@ -6,11 +6,103 @@ using UnityEngine.Events;
 
 public class GimmickInput : MonoBehaviour
 {
-    [Header("")]
+    public bool testbool;
+    [Header("자식오브젝트에서 gimmick trigger를 가진 오브젝트를 탐색\n별도로 트리거를 넣어서 다중 트리거를 구현할 수 있습니다")]
     public List<GimmickTrigger> triggers;
+    
+    public enum typetotrigger
+    {
+        And,
+        Or,
+        Sequentially
+    }
+
+    [Header("And = 전부 트리거 되야함\nOr = 트리거중 하나라도 트리거되면 실행 \nSequentially = 리스트의 순서대로 트리거 되야함")]
+    public typetotrigger TypeToTrigger;
+    private int sequentialIndex = 0;
+    bool CheckAllTriggers()
+    {
+        foreach (var trigger in triggers)
+        {
+            if (!trigger.isTriggered) // 하나라도 트리거되지 않았다면 false 반환
+            {
+                return false;
+            }
+        }
+        return true; // 모두 트리거되었다면 true 반환
+    }
+
+    // 트리거 중 하나라도 발동되었는지 확인하는 함수 (Or 모드)
+    bool CheckAnyTrigger()
+    {
+        foreach (var trigger in triggers)
+        {
+            if (trigger.isTriggered) // 하나라도 트리거되었다면 true 반환
+            {
+                return true;
+            }
+        }
+        return false; // 아무 트리거도 발동되지 않았으면 false 반환
+    }
+
+    // 순차적으로 트리거가 발동되었는지 확인하는 함수 (Sequentially 모드)
+    bool CheckSequentialTrigger()
+    {
+        // 현재 순서의 트리거가 발동되었는지 확인
+        if (sequentialIndex < triggers.Count && triggers[sequentialIndex].isTriggered)
+        {
+            sequentialIndex++; // 다음 순서로 이동
+
+            // 모든 트리거가 순차적으로 발동되었으면 true 반환
+            if (sequentialIndex >= triggers.Count)
+            {
+                sequentialIndex = 0; // 순서 초기화 (다음 체크를 위해)
+                return true;
+            }
+        }
+
+        return false;
+    }
+    public void TriggerCheck()
+    {
+        if (triggers.Count != 0)
+        {
+            if (triggers.Count <= 2)
+            {
+                switch (TypeToTrigger)
+                {
+                    case typetotrigger.And:
+                        if (CheckAllTriggers())
+                        {
+                            InvokeEvent();
+                        }
+                        break;
+
+                    case typetotrigger.Or:
+                        if (CheckAnyTrigger())
+                        {
+                            InvokeEvent();
+                        }
+                        break;
+
+                    case typetotrigger.Sequentially:
+                        if (CheckSequentialTrigger())
+                        {
+                            InvokeEvent();
+                        }
+                        break;
+                }
+            }
+            else
+            {
+                InvokeEvent();
+            }
+        }
+    }
 
 
-    [System.Serializable]
+
+[System.Serializable]
     public class SimpleEvent : UnityEvent
     {
     }
@@ -21,6 +113,10 @@ public class GimmickInput : MonoBehaviour
 
     public void InvokeEvent()
     {
+        for (int i = 0; i < triggers.Count; i++)
+        {
+            triggers[i].isTriggered = false;
+        }
         if (triggerMultipleTimes)
         {
             for (int i = 0; i < OutputEvent.Count; i++)
