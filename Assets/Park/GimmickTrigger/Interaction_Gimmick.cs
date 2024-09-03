@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class Interaction_Gimmick : GimmickTrigger
 {
-
+    
     public LayerMask DetectionLayer; // 중돌 감지 레이어
 
     public RectTransform InteractionImge; // UI 이미지의 RectTransform
@@ -37,6 +39,11 @@ public class Interaction_Gimmick : GimmickTrigger
         {
             InvokeEventRunOnTrigger();
         }
+        if (isTriggered)
+        {
+            InteractionImge.gameObject.SetActive(false);
+        }
+        
     }
     private void OnTriggerEnter(Collider other)
     {
