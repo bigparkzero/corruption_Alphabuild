@@ -41,10 +41,12 @@ public class SkillController
             {
                 case Morph.NONE:
                     skills[morphCombination].Add(SkillList.Basic_Ground, 0);
+                    skills[morphCombination].Add(SkillList.Basic_Air, 1);
                     break;
 
                 case Morph.LEFT_HAND:
                     skills[morphCombination].Add(SkillList.Basic_Ground, 0);
+                    skills[morphCombination].Add(SkillList.Basic_Air, 1);
                     break;
                 case Morph.RIGHT_HAND:
                     skills[morphCombination].Add(SkillList.Basic_Ground, 0);

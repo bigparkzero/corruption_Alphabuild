@@ -146,6 +146,7 @@ public class PlayerMainController : MainController
 
             Animator newAnim = bodies[currentMorph].GetComponent<Animator>();
             anim.ChangeAnimator(newAnim);
+            anim.SetInteger("Morph", (int)morph);
         }
         else
         {
