@@ -39,7 +39,7 @@ public class Interaction_Gimmick : GimmickTrigger
         {
             InvokeEventRunOnTrigger();
         }
-        if (isTriggered)
+        if (isTriggered && isPlayerInTrigger)
         {
             InteractionImge.gameObject.SetActive(false);
         }

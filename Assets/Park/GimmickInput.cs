@@ -113,12 +113,12 @@ public class GimmickInput : MonoBehaviour
 
     public void InvokeEvent()
     {
-        for (int i = 0; i < triggers.Count; i++)
-        {
-            triggers[i].isTriggered = false;
-        }
         if (triggerMultipleTimes)
         {
+            for (int i = 0; i < triggers.Count; i++)
+            {
+                triggers[i].isTriggered = false;
+            }
             for (int i = 0; i < OutputEvent.Count; i++)
             {
                 for (int j = 0; j < OutputEvent[i].GetPersistentEventCount(); j++)
